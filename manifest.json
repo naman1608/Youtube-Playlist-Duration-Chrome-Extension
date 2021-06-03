@@ -1,0 +1,12 @@
+{
+    "name": "PlaylistDuration",
+    "description": "Google Chrome extension to show the total duration of a playlist on Youtube",
+    "version": "1.0",
+    "manifest_version": 3,
+    "content_scripts": [
+        {
+            "matches": ["https://*.youtube.com/playlist*"],
+            "js":["content.js"]
+        }
+    ]
+}
