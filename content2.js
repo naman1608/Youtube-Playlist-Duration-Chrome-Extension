@@ -1,44 +1,25 @@
-console.log('content2');
-let playlist_size_array = [];
-var playlist_size;
-setTimeout(1.0);
-document.querySelectorAll('[dir="auto"][class="style-scope yt-formatted-string"]').forEach(s => playlist_size_array.push(s.innerText));
-for(var i = 0 ; i < playlist_size_array.length - 1 ; i++) {
-    if(playlist_size_array[i]=='/'){
-        playlist_size = playlist_size_array[i+1];
-    }
-}
-while (document.getElementsByTagName("ytd-playlist-panel-video-renderer").length < playlist_size){
-    console.log('Started');
-    let total_duration_in_string_2 = add_total_time()
-    console.log(total_duration_in_string_2);
-    document.getElementById("publisher-container").insertAdjacentHTML("beforeEnd","<span id='totaltime'> - "+total_duration_in_string_2+"</span>");
+let playlist_size = Number(document.querySelector('#publisher-container > div > yt-formatted-string').innerText.split('/')[1].trim().split(' ')[0]);
+
+check(document.querySelectorAll(".style-scope ytd-thumbnail-overlay-time-status-renderer").length);
+
+function check(a) {
+    console.log(a);
+    if (a<playlist_size) setTimeout( () => check(document.querySelectorAll(".style-scope ytd-thumbnail-overlay-time-status-renderer").length),100);
+    else document.getElementById("publisher-container").insertAdjacentHTML("beforeEnd","<span id='totaltime' class='yt-simple-endpoint style-scope yt-formatted-string'> - "+add_total_time()+"</span>");
 }
 
-
-function add_total_time(){
+function add_total_time() {
     let times = [];
     document.querySelectorAll(".style-scope ytd-thumbnail-overlay-time-status-renderer").forEach(s => times.push(s.innerText));
-    if(times.length) {
-        let time_split = [];
-        console.log('times\n');
-        console.log(times);
-        times.forEach(s => time_split.push(s.split(":")));
-        total_duration_1 = 0;
-        for( var i = 0 ; i < playlist_size ; i++) {
-            time_add(time_split[i]);
-        }
-        console.log('total duration\n');
-        console.log(total_duration_1);
-        let total_duration_in_string_1 = calculate_total_duration(total_duration_1);
-        //document.getElementById("stats").append(" • ");
-        //document.getElementById("stats").append(total_duration_in_string);
-        return total_duration_in_string_1;
-    } else {
-        setTimeout(add_total_time,1000);
+    let time_split = [];
+    times.forEach(s => time_split.push(s.split(":")));
+    total_duration_1 = 0;
+    for(var i = 0 ; i < playlist_size ; i++) {
+        time_add(time_split[i]);
     }
+    let total_duration_in_string_1 = calculate_total_duration(total_duration_1);
+    return total_duration_in_string_1;
 }
-
 
 function calculate_total_duration(total_duration){
     if (total_duration>=3600) {
